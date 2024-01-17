@@ -1,0 +1,14 @@
+---
+- name: Kill a process
+  hosts: web
+  become: true  # To execute commands as a superuser (root)
+
+  tasks:
+    - name: Check if the process exists
+      shell: "pgrep {{ process_name }}"
+      register: process_status
+      ignore_errors: true
+
+    - name: Kill the process if it exists
+      shell: "pkill {{ process_name }}"
+      when: process_status.rc == 0
